@@ -1,0 +1,15 @@
+---
+- name: Initial Installation
+  hosts: office_internal_hosts
+  become: yes
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Install SSHPASS
+      apt:
+        name: sshpass
+        state: present
+    - name: Creating Directory for Project
+      file:
+        path: /home/project24
+        state: directory

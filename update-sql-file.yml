@@ -1,0 +1,34 @@
+- name: MySQL Fill DB
+  hosts: office_internal_hosts
+  become: yes
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Copy main sql file
+      copy:
+        src: /home/ansible-config/mysql/main.sql
+        dest: /home
+    - name: Copy log sql file
+      copy:
+        src: /home/ansible-config/mysql/log.sql
+        dest: /home
+    - name: Fill DB with log.sql
+      community.mysql.mysql_db:
+          name: log
+          target: /home/log.sql
+          state: import
+          login_unix_socket: /run/mysqld/mysqld.sock
+    - name: Fill DB with main.sql
+      community.mysql.mysql_db:
+          name: main
+          target: /home/main.sql
+          state: import
+          login_unix_socket: /run/mysqld/mysqld.sock
+    - name: Cleaning up log sql file
+      file:
+        path: "/home/log.sql"
+        state: absent
+    - name: Cleaning up main sql file
+      file:
+        path: "/home/main.sql"
+        state: absent

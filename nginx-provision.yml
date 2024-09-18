@@ -1,0 +1,27 @@
+---
+- name: Nginx Provisioning
+  hosts: office_internal_hosts
+  become: yes
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+    - name: Check Nginx
+      service:
+        name: nginx
+        state: started
+    - name: Copy nginx default configuration file
+      copy:
+        src: /home/ansible-config/nginx/default
+        dest: /etc/nginx/sites-available
+    - name: Remove default file in sites-enabled
+      shell: rm /etc/nginx/sites-enabled/default
+    - name: Symbolic link to sites-enabled
+      shell: ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+    - name: Test nginx configuration file
+      shell: nginx -t
+    - name: Restart Nginx
+      shell: systemctl reload nginx

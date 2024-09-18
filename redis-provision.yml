@@ -1,0 +1,46 @@
+---
+- name: Install and configure Redis
+  hosts: host_24
+  become: yes
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Install Redis
+      apt:
+        name: redis-server
+        state: present
+
+    - name: Ensure Redis is enabled and started
+      service:
+        name: redis-server
+        state: started
+        enabled: yes
+
+    - name: Configure Redis
+      lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: "^#*bind "
+        line: "bind 0.0.0.0"
+        state: present
+        backup: yes
+
+    - name: Set Redis to use custom port 10520
+      lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: "^#*port "
+        line: "port 10520"
+        state: present
+        backup: yes
+
+    - name: Ensure Redis configuration is correct
+      lineinfile:
+        path: /etc/redis/redis.conf
+        regexp: "^#*protected-mode "
+        line: "protected-mode yes"
+        state: present
+        backup: yes
+
+    - name: Restart Redis to apply configuration changes
+      service:
+        name: redis-server
+        state: restarted

@@ -1,0 +1,68 @@
+---
+- name: MySQL Provisioning
+  hosts: office_internal_hosts
+  become: yes
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Install MySQL
+      apt:
+        name: mysql-server-8.0
+        state: present
+
+    - name: Copy mysqld.cnf file
+      copy:
+        src: ./mysql/mysqld.cnf
+        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+        owner: mysql
+        group: mysql
+        mode: "0644"
+
+    - name: Check MySQL Service
+      service:
+        name: mysql
+        state: started
+
+    - name: Install pip
+      apt:
+        name: python3-pip
+        state: present
+
+    # # jammy
+    # - name: Install PyMySQL
+    #   apt:
+    #     name: pymysql
+    #     state: present
+
+    # noble
+    - name: Install PyMySQL
+      apt:
+        name: python3-pymysql
+        state: present
+
+    - name: Update mysql root password for all root accounts
+      community.mysql.mysql_user:
+        name: "{{ mysql_user }}"
+        host: "%"
+        password: "{{ mysql_pass }}"
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        config_file: /etc/mysql/mysql.conf.d/mysqld.cnf
+        priv: "*.*:ALL,GRANT"
+
+    - name: Create db named main
+      community.mysql.mysql_db:
+        name: main
+        state: present
+        login_unix_socket: /run/mysqld/mysqld.sock
+
+    - name: Create db named log
+      community.mysql.mysql_db:
+        name: log
+        state: present
+        login_unix_socket: /run/mysqld/mysqld.sock
+
+    - name: Restart MySQL Service
+      service:
+        name: mysql
+        state: restarted

@@ -1,0 +1,10 @@
+---
+- name: MySQL DB Provisioning
+  hosts: my_host
+  become: yes
+  tasks:
+    - name: Create db named main
+      community.mysql.mysql_db:
+        name: main
+        state: present
+        login_unix_socket: /run/mysqld/mysqld.sock

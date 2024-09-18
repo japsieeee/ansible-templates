@@ -1,0 +1,31 @@
+---
+# tasks file for mongoDB setup
+- name: MongoDB Installation
+  hosts: office_internal_hosts
+  become: true
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Import public key
+      apt_key:
+        url: "https://www.mongodb.org/static/pgp/server-7.0.asc"
+        state: present
+
+    - name: Add repository
+      apt_repository:
+        filename: "/etc/apt/sources.list.d/mongodb-org-7.0.list"
+        repo: "deb https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse"
+        state: present
+        update_cache: yes
+
+    - name: Install mongoDB
+      apt:
+        name: mongodb-org
+        state: present
+        update_cache: yes
+
+    - name: Ensure mongodb is running and and enabled to start automatically on reboots
+      service:
+        name: mongod
+        enabled: yes
+        state: started
