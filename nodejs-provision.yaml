@@ -1,9 +1,9 @@
 ---
-- hosts: office_internal_hosts
+- hosts: my_host
   gather_facts: yes
   become: yes
   vars_files:
-    - vars.yml
+    - vars.yaml
   tasks:
     - name: Add Node.js repository
       shell: curl -fsSL https://deb.nodesource.com/setup_21.x | bash -

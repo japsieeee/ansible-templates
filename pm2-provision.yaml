@@ -1,11 +1,11 @@
 # before running this template please copy and paste the content from README file first -> /home/ansible-config/pm2/ecosystem.config.js
 
 ---
-- hosts: office_internal_hosts
+- hosts: my_host
   gather_facts: yes
   become: yes
   vars_files:
-    - vars.yml
+    - vars.yaml
   tasks:
     - name: PM2 Installation
       shell: npm i -g pm2

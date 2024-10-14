@@ -1,9 +1,9 @@
 ---
 - name: MySQL Provisioning
-  hosts: office_internal_hosts
+  hosts: my_host
   become: yes
   vars_files:
-    - vars.yml
+    - vars.yaml
   tasks:
     - name: Install MySQL
       apt:
@@ -53,12 +53,6 @@
     - name: Create db named main
       community.mysql.mysql_db:
         name: main
-        state: present
-        login_unix_socket: /run/mysqld/mysqld.sock
-
-    - name: Create db named log
-      community.mysql.mysql_db:
-        name: log
         state: present
         login_unix_socket: /run/mysqld/mysqld.sock
 

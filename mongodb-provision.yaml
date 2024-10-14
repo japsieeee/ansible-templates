@@ -1,10 +1,10 @@
 ---
 # tasks file for mongoDB setup
 - name: MongoDB Installation
-  hosts: office_internal_hosts
+  hosts: my_host
   become: true
   vars_files:
-    - vars.yml
+    - vars.yaml
   tasks:
     - name: Import public key
       apt_key:

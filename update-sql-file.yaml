@@ -2,7 +2,7 @@
   hosts: office_internal_hosts
   become: yes
   vars_files:
-    - vars.yml
+    - vars.yaml
   tasks:
     - name: Copy main sql file
       copy:

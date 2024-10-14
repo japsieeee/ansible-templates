@@ -1,9 +1,9 @@
 ---
 - name: Nginx Provisioning
-  hosts: office_internal_hosts
+  hosts: my_host
   become: yes
   vars_files:
-    - vars.yml
+    - vars.yaml
   tasks:
     - name: Install Nginx
       apt:

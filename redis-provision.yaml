@@ -3,7 +3,7 @@
   hosts: host_24
   become: yes
   vars_files:
-    - vars.yml
+    - vars.yaml
   tasks:
     - name: Install Redis
       apt:
